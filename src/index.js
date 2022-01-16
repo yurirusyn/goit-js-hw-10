@@ -1,7 +1,7 @@
 import './css/styles.css';
-import fetchCountries from './fetchCountries'
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
+import API from './fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -11,16 +11,19 @@ countryList: document.querySelector(".country-list"),
 countryInfo: document.querySelector(".country-info"),
 }
 
+const api = new API();
+
 
 refs.input.addEventListener("input", debounce(inputValue, DEBOUNCE_DELAY))
 
 function inputValue (e) {
     const value = e.target.value.trim();
+    api.newValue = value;
     if (value === "") {
         refs.countryList.innerHTML = "";
         refs.countryInfo.innerHTML = ""
     }
-    fetchCountries(value).then( respons => {
+    api.fetchCountries().then( respons => {
         console.log(e.target.value);
          if (respons.length > 10) {
             Notiflix.Notify.info("Too many matches found. Please enter a more specific name.");
@@ -42,15 +45,6 @@ function inputValue (e) {
               else if (respons.length === 1){
                 
                 const marcup = respons.map(country => {
-                // // list.className = "listelement"
-                // // const para =  document.createElement("p");
-                // para.innerHTML = `<img src="${country.flags.svg}" alt="${country.name.official}" width="30" >${country.name.official}`
-
-                // refs.countryList.innerHTML = "";
-                // refs.countryInfo.innerHTML = ""
-                // return refs.countryInfo.append(para)
-
-
                 return `<p><img src="${country.flags.svg}" alt="${country.name.official}" width="30" >${country.name.official}</p>
                 <p>Capital: ${country.capital}</p>
                 <p>Population: ${country.population}</p>
