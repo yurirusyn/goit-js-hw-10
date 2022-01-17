@@ -19,40 +19,24 @@ refs.input.addEventListener("input", debounce(inputValue, DEBOUNCE_DELAY))
 function inputValue (e) {
     const value = e.target.value.trim();
     api.newValue = value;
-    if (value === "") {
-        refs.countryList.innerHTML = "";
-        refs.countryInfo.innerHTML = ""
+    if (!value) {
+        addMarkup() 
+       return
     }
     api.fetchCountries().then( respons => {
         console.log(e.target.value);
          if (respons.length > 10) {
             Notiflix.Notify.info("Too many matches found. Please enter a more specific name.");
-            refs.countryList.innerHTML = "";
-            refs.countryInfo.innerHTML = ""
+            clearMarkup() 
+            return
         }
         else if (respons.length >= 2 && respons.length <= 10 ){
-           
-            respons.map(country => {
-                const list =  document.createElement("li");
-                list.className = "listelement"
-                list.innerHTML = `<p><img src="${country.flags.svg}" alt="${country.name.official}" width="30" >${country.name.official}</p>`
-                refs.countryList.append(list)
-                
-                refs.countryInfo.innerHTML = "";
-                return
-            });
+           countryMarkup(respons); 
+            
+           addMarkup(countryMarkup(respons), ' ')
           } 
               else if (respons.length === 1){
-                
-                const marcup = respons.map(country => {
-                return `<p><img src="${country.flags.svg}" alt="${country.name.official}" width="30" >${country.name.official}</p>
-                <p>Capital: ${country.capital}</p>
-                <p>Population: ${country.population}</p>
-                <p>Languages: ${Object.values(country.languages)}</p>`
-                });
-                refs.countryList.innerHTML = "";
-                refs.countryInfo.innerHTML = "";
-                refs.countryInfo.innerHTML = marcup;
+                addMarkup(' ',countrysMarkup(respons))
               }
       
     } ).catch( (eror) => {
@@ -61,5 +45,25 @@ function inputValue (e) {
     );
 }
 
+function addMarkup (a = '', b = '') {
+    refs.countryList.innerHTML = a;
+    refs.countryInfo.innerHTML = b;
+};
 
+function countryMarkup (countrys) {
+const markup = countrys.map(country => {
+ return `<li><p><img src="${country.flags.svg}" alt="${country.name.official}" width="30" >${country.name.official}</p></li>`
+}).join('');
+return markup
+}
+
+function countrysMarkup (countrys) {
+    const markup = countrys.map(country => {
+     return `<p><img src="${country.flags.svg}" alt="${country.name.official}" width="30" >${country.name.official}</p>
+     <p>Capital: ${country.capital}</p>
+     <p>Population: ${country.population}</p>
+     <p>Languages: ${Object.values(country.languages)}</p>`
+    }).join('');
+    return markup
+    }
 

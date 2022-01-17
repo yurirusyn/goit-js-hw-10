@@ -24,7 +24,7 @@ export default class API {
   }
   fetchCountries() {
     const BASE_URL = "https://restcountries.com/v3.1/name/";
-    return fetch(`${BASE_URL}${this.value}${fields}`).then(
+     return fetch(`${BASE_URL}${this.value}${fields}`).then(
       response => {
         if (!response.ok) {
             throw new Error(response.status);
@@ -42,7 +42,6 @@ export default class API {
   get newValue(){
     return this.value
   }
-
 
 }
 
