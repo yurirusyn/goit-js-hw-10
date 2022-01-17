@@ -27,7 +27,7 @@ function inputValue (e) {
         console.log(e.target.value);
          if (respons.length > 10) {
             Notiflix.Notify.info("Too many matches found. Please enter a more specific name.");
-            clearMarkup() 
+            addMarkup() 
             return
         }
         else if (respons.length >= 2 && respons.length <= 10 ){
